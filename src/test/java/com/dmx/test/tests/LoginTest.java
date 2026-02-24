@@ -1,4 +1,4 @@
-package com.dmx.test.pages.tests;
+package com.dmx.test.tests;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
