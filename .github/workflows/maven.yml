@@ -37,7 +37,6 @@ jobs:
       run: |
         CHROME_VERSION="${{ steps.chrome-version.outputs.version }}"
         CHROME_MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d. -f1)
-        # Lấy version mới nhất của ChromeDriver tương ứng với major version
         DRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_$CHROME_MAJOR_VERSION")
         wget -q "https://storage.googleapis.com/chrome-for-testing-public/$DRIVER_VERSION/linux64/chromedriver-linux64.zip"
         unzip chromedriver-linux64.zip
@@ -46,10 +45,23 @@ jobs:
         chmod +x $HOME/.local/bin/chromedriver
         echo "$HOME/.local/bin" >> $GITHUB_PATH
 
+    - name: Test network connectivity to target website
+      run: |
+        echo "Testing connection to dienmayxanh.com..."
+        curl -I https://www.dienmayxanh.com
+        curl -I https://www.dienmayxanh.com/lich-su-mua-hang/dang-nhap
+
     - name: Build with Maven
       run: mvn -B clean compile
 
-    - name: Run tests
+    - name: List compiled classes
+      run: |
+        echo "=== Compiled main classes ==="
+        find target/classes -type f -name "*.class" | head -20
+        echo "=== Compiled test classes ==="
+        find target/test-classes -type f -name "*.class" | head -20
+
+    - name: Run tests with xvfb (headless)
       run: xvfb-run mvn test
 
     - name: Upload test reports
