@@ -2,20 +2,20 @@
 <testng-results ignored="0" total="5" passed="3" failed="2" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2026-02-24T07:02:35 ICT" name="Suite" finished-at="2026-02-24T07:02:46 ICT" duration-ms="11918">
+  <suite started-at="2026-02-24T07:57:55 ICT" name="Dien May Xanh Login Test Suite" finished-at="2026-02-24T07:58:05 ICT" duration-ms="10580">
     <groups>
     </groups>
-    <test started-at="2026-02-24T07:02:35 ICT" name="Test" finished-at="2026-02-24T07:02:46 ICT" duration-ms="11918">
+    <test started-at="2026-02-24T07:57:55 ICT" name="Test" finished-at="2026-02-24T07:58:05 ICT" duration-ms="10580">
       <class name="test.LoginTest">
-        <test-method is-config="true" signature="setUp()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:35 ICT" name="setUp" finished-at="2026-02-24T07:02:39 ICT" duration-ms="4041" status="PASS">
+        <test-method is-config="true" signature="setUp()[pri:0, instance:test.LoginTest@5aa9e4eb]" started-at="2026-02-24T07:57:55 ICT" name="setUp" finished-at="2026-02-24T07:57:58 ICT" duration-ms="3281" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setUp -->
-        <test-method is-config="true" signature="initPage()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:39 ICT" name="initPage" finished-at="2026-02-24T07:02:39 ICT" duration-ms="13" status="PASS">
+        <test-method is-config="true" signature="initPage()[pri:0, instance:test.LoginTest@5aa9e4eb]" started-at="2026-02-24T07:57:58 ICT" name="initPage" finished-at="2026-02-24T07:57:58 ICT" duration-ms="4" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- initPage -->
-        <test-method signature="testEmptyPhone()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:39 ICT" name="testEmptyPhone" description="TC04 - Để trống số điện thoại" finished-at="2026-02-24T07:02:39 ICT" duration-ms="442" status="FAIL">
+        <test-method signature="testEmptyPhone()[pri:0, instance:test.LoginTest@5aa9e4eb]" started-at="2026-02-24T07:57:58 ICT" name="testEmptyPhone" description="TC04 - Để trống số điện thoại" finished-at="2026-02-24T07:57:58 ICT" duration-ms="415" status="FAIL">
           <exception class="java.lang.AssertionError">
             <message>
               <![CDATA[Thông báo lỗi sai expected [Vui lòng nhập số điện thoại] but found [Vui lòng xác thực "Không phải là người máy" để tiếp tục đăng nhập.]]]>
@@ -60,7 +60,11 @@ at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:91)
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testEmptyPhone -->
-        <test-method signature="testPhoneTooShort()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:39 ICT" name="testPhoneTooShort" description="TC02 - Số điện thoại ngắn hơn 10 số" finished-at="2026-02-24T07:02:40 ICT" duration-ms="450" status="FAIL">
+        <test-method is-config="true" signature="initPage()[pri:0, instance:test.LoginTest@5aa9e4eb]" started-at="2026-02-24T07:57:58 ICT" name="initPage" finished-at="2026-02-24T07:57:58 ICT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- initPage -->
+        <test-method signature="testPhoneTooShort()[pri:0, instance:test.LoginTest@5aa9e4eb]" started-at="2026-02-24T07:57:58 ICT" name="testPhoneTooShort" description="TC02 - Số điện thoại ngắn hơn 10 số" finished-at="2026-02-24T07:57:59 ICT" duration-ms="401" status="FAIL">
           <exception class="java.lang.AssertionError">
             <message>
               <![CDATA[Thông báo lỗi sai expected [Số điện thoại không hợp lệ] but found [Vui lòng xác thực "Không phải là người máy" để tiếp tục đăng nhập.]]]>
@@ -105,39 +109,35 @@ at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:91)
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testPhoneTooShort -->
-        <test-method is-config="true" signature="initPage()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:39 ICT" name="initPage" finished-at="2026-02-24T07:02:39 ICT" duration-ms="0" status="PASS">
+        <test-method is-config="true" signature="initPage()[pri:0, instance:test.LoginTest@5aa9e4eb]" started-at="2026-02-24T07:57:59 ICT" name="initPage" finished-at="2026-02-24T07:57:59 ICT" duration-ms="0" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- initPage -->
-        <test-method is-config="true" signature="initPage()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:40 ICT" name="initPage" finished-at="2026-02-24T07:02:40 ICT" duration-ms="0" status="PASS">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- initPage -->
-        <test-method signature="testPhoneWithLetters()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:40 ICT" name="testPhoneWithLetters" description="TC03 - Số điện thoại chứa chữ cái" finished-at="2026-02-24T07:02:40 ICT" duration-ms="692" status="PASS">
+        <test-method signature="testPhoneWithLetters()[pri:0, instance:test.LoginTest@5aa9e4eb]" started-at="2026-02-24T07:57:59 ICT" name="testPhoneWithLetters" description="TC03 - Số điện thoại chứa chữ cái" finished-at="2026-02-24T07:57:59 ICT" duration-ms="663" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testPhoneWithLetters -->
-        <test-method signature="testPhoneWithSpecialChars()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:40 ICT" name="testPhoneWithSpecialChars" description="TC05 - Số điện thoại chứa ký tự đặc biệt" finished-at="2026-02-24T07:02:41 ICT" duration-ms="710" status="PASS">
+        <test-method signature="testPhoneWithSpecialChars()[pri:0, instance:test.LoginTest@5aa9e4eb]" started-at="2026-02-24T07:57:59 ICT" name="testPhoneWithSpecialChars" description="TC05 - Số điện thoại chứa ký tự đặc biệt" finished-at="2026-02-24T07:58:00 ICT" duration-ms="692" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testPhoneWithSpecialChars -->
-        <test-method is-config="true" signature="initPage()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:40 ICT" name="initPage" finished-at="2026-02-24T07:02:40 ICT" duration-ms="0" status="PASS">
+        <test-method is-config="true" signature="initPage()[pri:0, instance:test.LoginTest@5aa9e4eb]" started-at="2026-02-24T07:57:59 ICT" name="initPage" finished-at="2026-02-24T07:57:59 ICT" duration-ms="0" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- initPage -->
-        <test-method signature="testValidPhone()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:41 ICT" name="testValidPhone" description="TC01 - Số điện thoại hợp lệ 10 số" finished-at="2026-02-24T07:02:46 ICT" duration-ms="5398" status="PASS">
+        <test-method signature="testValidPhone()[pri:0, instance:test.LoginTest@5aa9e4eb]" started-at="2026-02-24T07:58:00 ICT" name="testValidPhone" description="TC01 - Số điện thoại hợp lệ 10 số" finished-at="2026-02-24T07:58:05 ICT" duration-ms="4943" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testValidPhone -->
-        <test-method is-config="true" signature="initPage()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:41 ICT" name="initPage" finished-at="2026-02-24T07:02:41 ICT" duration-ms="0" status="PASS">
+        <test-method is-config="true" signature="initPage()[pri:0, instance:test.LoginTest@5aa9e4eb]" started-at="2026-02-24T07:58:00 ICT" name="initPage" finished-at="2026-02-24T07:58:00 ICT" duration-ms="0" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- initPage -->
-        <test-method is-config="true" signature="tearDown()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:46 ICT" name="tearDown" finished-at="2026-02-24T07:02:46 ICT" duration-ms="134" status="PASS">
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:test.LoginTest@5aa9e4eb]" started-at="2026-02-24T07:58:05 ICT" name="tearDown" finished-at="2026-02-24T07:58:05 ICT" duration-ms="141" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- tearDown -->
       </class> <!-- test.LoginTest -->
     </test> <!-- Test -->
-  </suite> <!-- Suite -->
+  </suite> <!-- Dien May Xanh Login Test Suite -->
 </testng-results>

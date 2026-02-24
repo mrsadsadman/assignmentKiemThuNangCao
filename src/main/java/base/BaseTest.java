@@ -2,6 +2,7 @@ package base;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
@@ -12,11 +13,23 @@ public class BaseTest {
 
     @BeforeClass
     public void setUp() {
-        // Đường dẫn tuyệt đối tới chromedriver.exe của bạn
-        System.setProperty("webdriver.chrome.driver",
-                "I:\\download\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
+        // Xác định hệ điều hành
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")) {
+            // Trên Windows, dùng driver từ thư mục drivers/
+            System.setProperty("webdriver.chrome.driver", "drivers/chromedriver.exe");
+        }
+        // Trên Linux (CI), chromedriver sẽ được cài riêng và nằm trong PATH
 
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        // Nếu chạy trên CI (headless)
+        if (System.getenv("CI") != null) {
+            options.addArguments("--headless");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--window-size=1920,1080");
+        }
+        driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.get("https://www.dienmayxanh.com/lich-su-mua-hang/dang-nhap");
