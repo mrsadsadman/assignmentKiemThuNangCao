@@ -20,15 +20,31 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
 
-    - name: Install Chrome
+    - name: Install Chrome (Google Chrome)
       run: |
+        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
         sudo apt-get update
         sudo apt-get install -y google-chrome-stable
 
-    - name: Install ChromeDriver
+    - name: Get Chrome version
+      id: chrome-version
       run: |
-        sudo apt-get install -y chromium-chromedriver
-        echo "/usr/lib/chromium-browser/" >> $GITHUB_PATH
+        CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
+        echo "version=$CHROME_VERSION" >> $GITHUB_OUTPUT
+
+    - name: Download matching ChromeDriver
+      run: |
+        CHROME_VERSION="${{ steps.chrome-version.outputs.version }}"
+        CHROME_MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d. -f1)
+        # Lấy version mới nhất của ChromeDriver tương ứng với major version
+        DRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_$CHROME_MAJOR_VERSION")
+        wget -q "https://storage.googleapis.com/chrome-for-testing-public/$DRIVER_VERSION/linux64/chromedriver-linux64.zip"
+        unzip chromedriver-linux64.zip
+        mkdir -p $HOME/.local/bin
+        mv chromedriver-linux64/chromedriver $HOME/.local/bin/chromedriver
+        chmod +x $HOME/.local/bin/chromedriver
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
 
     - name: Build with Maven
       run: mvn -B clean compile
