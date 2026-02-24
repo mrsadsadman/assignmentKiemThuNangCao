@@ -1,10 +1,11 @@
-package test;
-
-import base.BaseTest;
-import page.LoginPage;
+package com.dmx.test.pages.tests;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import com.dmx.test.base.BaseTest;
+import com.dmx.test.pages.LoginPage;
+
 import org.openqa.selenium.WebDriver;
 
 import static org.testng.Assert.*;
