@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="5" passed="3" failed="2" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2026-02-24T07:02:35 ICT" name="Suite" finished-at="2026-02-24T07:02:46 ICT" duration-ms="11918">
+    <groups>
+    </groups>
+    <test started-at="2026-02-24T07:02:35 ICT" name="Test" finished-at="2026-02-24T07:02:46 ICT" duration-ms="11918">
+      <class name="test.LoginTest">
+        <test-method is-config="true" signature="setUp()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:35 ICT" name="setUp" finished-at="2026-02-24T07:02:39 ICT" duration-ms="4041" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method is-config="true" signature="initPage()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:39 ICT" name="initPage" finished-at="2026-02-24T07:02:39 ICT" duration-ms="13" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- initPage -->
+        <test-method signature="testEmptyPhone()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:39 ICT" name="testEmptyPhone" description="TC04 - Để trống số điện thoại" finished-at="2026-02-24T07:02:39 ICT" duration-ms="442" status="FAIL">
+          <exception class="java.lang.AssertionError">
+            <message>
+              <![CDATA[Thông báo lỗi sai expected [Vui lòng nhập số điện thoại] but found [Vui lòng xác thực "Không phải là người máy" để tiếp tục đăng nhập.]]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.lang.AssertionError: Thông báo lỗi sai expected [Vui lòng nhập số điện thoại] but found [Vui lòng xác thực "Không phải là người máy" để tiếp tục đăng nhập.]
+at org.testng.Assert.fail(Assert.java:111)
+at org.testng.Assert.failNotEquals(Assert.java:1590)
+at org.testng.Assert.assertEqualsImpl(Assert.java:150)
+at org.testng.Assert.assertEquals(Assert.java:132)
+at org.testng.Assert.assertEquals(Assert.java:656)
+at test.LoginTest.testEmptyPhone(LoginTest.java:57)
+at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:141)
+at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:687)
+at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:230)
+at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:63)
+at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:995)
+at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:203)
+at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:154)
+at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:134)
+at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+at org.testng.TestRunner.privateRun(TestRunner.java:741)
+at org.testng.TestRunner.run(TestRunner.java:616)
+at org.testng.SuiteRunner.runTest(SuiteRunner.java:421)
+at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:413)
+at org.testng.SuiteRunner.privateRun(SuiteRunner.java:373)
+at org.testng.SuiteRunner.run(SuiteRunner.java:312)
+at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+at org.testng.TestNG.runSuitesSequentially(TestNG.java:1274)
+at org.testng.TestNG.runSuitesLocally(TestNG.java:1208)
+at org.testng.TestNG.runSuites(TestNG.java:1112)
+at org.testng.TestNG.run(TestNG.java:1079)
+at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:115)
+at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:293)
+at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:91)
+]]>
+            </full-stacktrace>
+          </exception> <!-- java.lang.AssertionError -->
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testEmptyPhone -->
+        <test-method signature="testPhoneTooShort()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:39 ICT" name="testPhoneTooShort" description="TC02 - Số điện thoại ngắn hơn 10 số" finished-at="2026-02-24T07:02:40 ICT" duration-ms="450" status="FAIL">
+          <exception class="java.lang.AssertionError">
+            <message>
+              <![CDATA[Thông báo lỗi sai expected [Số điện thoại không hợp lệ] but found [Vui lòng xác thực "Không phải là người máy" để tiếp tục đăng nhập.]]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.lang.AssertionError: Thông báo lỗi sai expected [Số điện thoại không hợp lệ] but found [Vui lòng xác thực "Không phải là người máy" để tiếp tục đăng nhập.]
+at org.testng.Assert.fail(Assert.java:111)
+at org.testng.Assert.failNotEquals(Assert.java:1590)
+at org.testng.Assert.assertEqualsImpl(Assert.java:150)
+at org.testng.Assert.assertEquals(Assert.java:132)
+at org.testng.Assert.assertEquals(Assert.java:656)
+at test.LoginTest.testPhoneTooShort(LoginTest.java:38)
+at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:141)
+at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:687)
+at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:230)
+at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:63)
+at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:995)
+at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:203)
+at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:154)
+at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:134)
+at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+at org.testng.TestRunner.privateRun(TestRunner.java:741)
+at org.testng.TestRunner.run(TestRunner.java:616)
+at org.testng.SuiteRunner.runTest(SuiteRunner.java:421)
+at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:413)
+at org.testng.SuiteRunner.privateRun(SuiteRunner.java:373)
+at org.testng.SuiteRunner.run(SuiteRunner.java:312)
+at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+at org.testng.TestNG.runSuitesSequentially(TestNG.java:1274)
+at org.testng.TestNG.runSuitesLocally(TestNG.java:1208)
+at org.testng.TestNG.runSuites(TestNG.java:1112)
+at org.testng.TestNG.run(TestNG.java:1079)
+at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:115)
+at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:293)
+at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:91)
+]]>
+            </full-stacktrace>
+          </exception> <!-- java.lang.AssertionError -->
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testPhoneTooShort -->
+        <test-method is-config="true" signature="initPage()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:39 ICT" name="initPage" finished-at="2026-02-24T07:02:39 ICT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- initPage -->
+        <test-method is-config="true" signature="initPage()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:40 ICT" name="initPage" finished-at="2026-02-24T07:02:40 ICT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- initPage -->
+        <test-method signature="testPhoneWithLetters()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:40 ICT" name="testPhoneWithLetters" description="TC03 - Số điện thoại chứa chữ cái" finished-at="2026-02-24T07:02:40 ICT" duration-ms="692" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testPhoneWithLetters -->
+        <test-method signature="testPhoneWithSpecialChars()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:40 ICT" name="testPhoneWithSpecialChars" description="TC05 - Số điện thoại chứa ký tự đặc biệt" finished-at="2026-02-24T07:02:41 ICT" duration-ms="710" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testPhoneWithSpecialChars -->
+        <test-method is-config="true" signature="initPage()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:40 ICT" name="initPage" finished-at="2026-02-24T07:02:40 ICT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- initPage -->
+        <test-method signature="testValidPhone()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:41 ICT" name="testValidPhone" description="TC01 - Số điện thoại hợp lệ 10 số" finished-at="2026-02-24T07:02:46 ICT" duration-ms="5398" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testValidPhone -->
+        <test-method is-config="true" signature="initPage()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:41 ICT" name="initPage" finished-at="2026-02-24T07:02:41 ICT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- initPage -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:test.LoginTest@7dcf94f8]" started-at="2026-02-24T07:02:46 ICT" name="tearDown" finished-at="2026-02-24T07:02:46 ICT" duration-ms="134" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- test.LoginTest -->
+    </test> <!-- Test -->
+  </suite> <!-- Suite -->
+</testng-results>
