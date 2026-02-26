@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Java CI with Maven + Selenium
 
 on:
   push:
@@ -8,82 +8,118 @@ on:
 
 jobs:
   test:
+
     runs-on: ubuntu-latest
 
+    env:
+      CI: true
+
     steps:
-    - name: Checkout code
+
+    - name: Checkout source
       uses: actions/checkout@v4
 
-    - name: Set up JDK 11
+
+    # Install Java
+    - name: Setup JDK 11
       uses: actions/setup-java@v4
       with:
-        java-version: '11'
-        distribution: 'temurin'
+        distribution: temurin
+        java-version: 11
+        cache: maven
 
-    # Install Chrome (official way)
-    - name: Install Google Chrome
+
+    # Install Chrome dependencies (CRITICAL)
+    - name: Install Chrome dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y wget unzip
-        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
+        sudo apt-get install -y \
+          wget \
+          unzip \
+          curl \
+          xvfb \
+          libglib2.0-0 \
+          libnss3 \
+          libxss1 \
+          libasound2 \
+          libxtst6 \
+          libatk-bridge2.0-0 \
+          libgtk-3-0 \
+          libgbm1
+
+
+    # Install Chrome stable
+    - name: Install Google Chrome
+      run: |
+        wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
         sudo apt install -y ./google-chrome-stable_current_amd64.deb
 
-    - name: Get Chrome version
-      id: chrome-version
-      run: |
-        CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+')
-        echo "version=$CHROME_VERSION" >> $GITHUB_OUTPUT
-        echo "Chrome version: $CHROME_VERSION"
+        google-chrome --version
 
-    - name: Download matching ChromeDriver
+
+    # Install matching ChromeDriver automatically
+    - name: Install matching ChromeDriver
       run: |
-        CHROME_VERSION="${{ steps.chrome-version.outputs.version }}"
+
+        CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
+
         CHROME_MAJOR=$(echo $CHROME_VERSION | cut -d. -f1)
 
+        echo "Chrome version: $CHROME_VERSION"
+        echo "Chrome major: $CHROME_MAJOR"
+
         DRIVER_VERSION=$(curl -s \
-          https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_$CHROME_MAJOR)
+        https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_$CHROME_MAJOR)
 
         echo "Driver version: $DRIVER_VERSION"
 
-        wget -q https://storage.googleapis.com/chrome-for-testing-public/$DRIVER_VERSION/linux64/chromedriver-linux64.zip
+        wget -q \
+        https://storage.googleapis.com/chrome-for-testing-public/$DRIVER_VERSION/linux64/chromedriver-linux64.zip
+
         unzip chromedriver-linux64.zip
 
         sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+
         sudo chmod +x /usr/local/bin/chromedriver
 
         chromedriver --version
 
-    # FIXED curl step (add User-Agent + don't fail build)
-    - name: Test network connectivity to target website
+
+    # Verify network
+    - name: Test network
       run: |
-        echo "Testing connection to dienmayxanh.com..."
+        curl -I https://www.google.com || true
+        curl -I https://www.dienmayxanh.com || true
 
-        curl -I https://www.dienmayxanh.com \
-          -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36" \
-          || true
 
-        curl -I https://www.dienmayxanh.com/lich-su-mua-hang/dang-nhap \
-          -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36" \
-          || true
-
-    - name: Build with Maven
+    # Build project
+    - name: Build
       run: mvn -B clean compile
 
-    - name: List compiled classes
-      run: |
-        echo "=== Compiled main classes ==="
-        find target/classes -type f -name "*.class" | head -20
-        echo "=== Compiled test classes ==="
-        find target/test-classes -type f -name "*.class" | head -20
 
-    # xvfb already available in ubuntu-latest
-    - name: Run tests (headless Chrome)
+    # Run tests using virtual display
+    - name: Run tests
       run: |
-        xvfb-run --auto-servernum mvn test
+        xvfb-run --auto-servernum \
+        --server-args="-screen 0 1920x1080x24" \
+        mvn -B test
 
+
+    # Upload reports even if failed
     - name: Upload test reports
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: test-reports
+        name: selenium-test-reports
         path: target/surefire-reports/
+
+
+    # Upload screenshots if you add them later
+    - name: Upload screenshots
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: screenshots
+        path: screenshots/
+        if-no-files-found: ignore
