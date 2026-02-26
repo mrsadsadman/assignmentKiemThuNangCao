@@ -14,28 +14,37 @@ public class BaseTest {
 
     protected WebDriver driver;
 
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void setUp() {
 
         ChromeOptions options = new ChromeOptions();
 
         options.setPageLoadStrategy(PageLoadStrategy.EAGER);
 
+        // stability
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--window-size=1920,1080");
+
+        // avoid automation detection
         options.addArguments("--disable-blink-features=AutomationControlled");
         options.addArguments("--disable-notifications");
         options.addArguments("--disable-popup-blocking");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--window-size=1920,1080");
 
-        if (System.getenv("CI") != null) {
+        boolean isCI = System.getenv("CI") != null;
+
+        if (isCI) {
+
+            System.out.println("Running in GitHub Actions CI");
 
             options.addArguments("--headless=new");
 
+            // realistic user agent
             options.addArguments(
                 "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
                 "AppleWebKit/537.36 (KHTML, like Gecko) " +
-                "Chrome/120.0.0.0 Safari/537.36"
+                "Chrome/145.0.0.0 Safari/537.36"
             );
         }
 
@@ -45,36 +54,58 @@ public class BaseTest {
                 .implicitlyWait(Duration.ofSeconds(10));
 
         driver.manage().timeouts()
-                .pageLoadTimeout(Duration.ofSeconds(30));
+                .pageLoadTimeout(Duration.ofSeconds(60));
 
         try {
 
-            driver.get(
-                "https://www.dienmayxanh.com/lich-su-mua-hang/dang-nhap"
-            );
+            String url =
+                "https://www.dienmayxanh.com/lich-su-mua-hang/dang-nhap";
 
-        } catch (Exception e) {
+            System.out.println("Opening: " + url);
 
-            if (System.getenv("CI") != null) {
+            driver.get(url);
+
+            System.out.println("Page title: " + driver.getTitle());
+
+            // detect Cloudflare block
+            if (driver.getTitle().toLowerCase().contains("attention")
+                    || driver.getPageSource().toLowerCase().contains("cloudflare")) {
+
+                throw new RuntimeException("Cloudflare detected");
+
+            }
+
+        }
+        catch (Exception e) {
+
+            if (isCI) {
 
                 System.out.println(
-                    "Website blocked CI runner. Skipping tests."
+                    "CI cannot access website. Marking tests skipped."
                 );
 
-                throw new SkipException("Blocked by Cloudflare");
+                throw new SkipException(
+                    "Website blocked GitHub runner: " + e.getMessage()
+                );
 
             } else {
 
-                throw e;
+                throw new RuntimeException(e);
 
             }
         }
     }
 
-    @AfterClass
+
+    @AfterClass(alwaysRun = true)
     public void tearDown() {
 
-        if (driver != null)
+        if (driver != null) {
+
             driver.quit();
+
+            System.out.println("Driver closed");
+
+        }
     }
 }
