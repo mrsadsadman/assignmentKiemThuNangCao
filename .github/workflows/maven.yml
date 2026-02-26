@@ -20,36 +20,51 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
 
-    - name: Install Chrome (Google Chrome)
+    # Install Chrome (official way)
+    - name: Install Google Chrome
       run: |
-        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-        sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
         sudo apt-get update
-        sudo apt-get install -y google-chrome-stable
+        sudo apt-get install -y wget unzip
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        sudo apt install -y ./google-chrome-stable_current_amd64.deb
 
     - name: Get Chrome version
       id: chrome-version
       run: |
-        CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
+        CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+')
         echo "version=$CHROME_VERSION" >> $GITHUB_OUTPUT
+        echo "Chrome version: $CHROME_VERSION"
 
     - name: Download matching ChromeDriver
       run: |
         CHROME_VERSION="${{ steps.chrome-version.outputs.version }}"
-        CHROME_MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d. -f1)
-        DRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_$CHROME_MAJOR_VERSION")
-        wget -q "https://storage.googleapis.com/chrome-for-testing-public/$DRIVER_VERSION/linux64/chromedriver-linux64.zip"
-        unzip chromedriver-linux64.zip
-        mkdir -p $HOME/.local/bin
-        mv chromedriver-linux64/chromedriver $HOME/.local/bin/chromedriver
-        chmod +x $HOME/.local/bin/chromedriver
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        CHROME_MAJOR=$(echo $CHROME_VERSION | cut -d. -f1)
 
+        DRIVER_VERSION=$(curl -s \
+          https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_$CHROME_MAJOR)
+
+        echo "Driver version: $DRIVER_VERSION"
+
+        wget -q https://storage.googleapis.com/chrome-for-testing-public/$DRIVER_VERSION/linux64/chromedriver-linux64.zip
+        unzip chromedriver-linux64.zip
+
+        sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+        sudo chmod +x /usr/local/bin/chromedriver
+
+        chromedriver --version
+
+    # FIXED curl step (add User-Agent + don't fail build)
     - name: Test network connectivity to target website
       run: |
         echo "Testing connection to dienmayxanh.com..."
-        curl -I https://www.dienmayxanh.com
-        curl -I https://www.dienmayxanh.com/lich-su-mua-hang/dang-nhap
+
+        curl -I https://www.dienmayxanh.com \
+          -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36" \
+          || true
+
+        curl -I https://www.dienmayxanh.com/lich-su-mua-hang/dang-nhap \
+          -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36" \
+          || true
 
     - name: Build with Maven
       run: mvn -B clean compile
@@ -61,8 +76,10 @@ jobs:
         echo "=== Compiled test classes ==="
         find target/test-classes -type f -name "*.class" | head -20
 
-    - name: Run tests with xvfb (headless)
-      run: xvfb-run mvn test
+    # xvfb already available in ubuntu-latest
+    - name: Run tests (headless Chrome)
+      run: |
+        xvfb-run --auto-servernum mvn test
 
     - name: Upload test reports
       if: always()
