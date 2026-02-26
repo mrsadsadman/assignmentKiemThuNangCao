@@ -1,14 +1,11 @@
-name: Java CI with Maven + Selenium
+name: Selenium Tests
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
 
     env:
@@ -16,12 +13,10 @@ jobs:
 
     steps:
 
-    - name: Checkout source
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
 
-    # Install Java
-    - name: Setup JDK 11
+    - name: Setup Java
       uses: actions/setup-java@v4
       with:
         distribution: temurin
@@ -29,97 +24,38 @@ jobs:
         cache: maven
 
 
-    # Install Chrome dependencies (CRITICAL)
-    - name: Install Chrome dependencies
+    - name: Install dependencies
       run: |
         sudo apt-get update
-
         sudo apt-get install -y \
-          wget \
-          unzip \
-          curl \
-          xvfb \
+          wget unzip curl xvfb \
           libglib2.0-0 \
           libnss3 \
           libxss1 \
-          libasound2 \
+          libasound2t64 \
           libxtst6 \
           libatk-bridge2.0-0 \
           libgtk-3-0 \
           libgbm1
 
 
-    # Install Chrome stable
-    - name: Install Google Chrome
+    - name: Install Chrome
       run: |
         wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
         sudo apt install -y ./google-chrome-stable_current_amd64.deb
-
         google-chrome --version
 
 
-    # Install matching ChromeDriver automatically
-    - name: Install matching ChromeDriver
-      run: |
-
-        CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
-
-        CHROME_MAJOR=$(echo $CHROME_VERSION | cut -d. -f1)
-
-        echo "Chrome version: $CHROME_VERSION"
-        echo "Chrome major: $CHROME_MAJOR"
-
-        DRIVER_VERSION=$(curl -s \
-        https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_$CHROME_MAJOR)
-
-        echo "Driver version: $DRIVER_VERSION"
-
-        wget -q \
-        https://storage.googleapis.com/chrome-for-testing-public/$DRIVER_VERSION/linux64/chromedriver-linux64.zip
-
-        unzip chromedriver-linux64.zip
-
-        sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
-
-        sudo chmod +x /usr/local/bin/chromedriver
-
-        chromedriver --version
-
-
-    # Verify network
-    - name: Test network
-      run: |
-        curl -I https://www.google.com || true
-        curl -I https://www.dienmayxanh.com || true
-
-
-    # Build project
-    - name: Build
-      run: mvn -B clean compile
-
-
-    # Run tests using virtual display
     - name: Run tests
       run: |
         xvfb-run --auto-servernum \
         --server-args="-screen 0 1920x1080x24" \
-        mvn -B test
+        mvn clean test
 
 
-    # Upload reports even if failed
-    - name: Upload test reports
+    - name: Upload report
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: selenium-test-reports
+        name: report
         path: target/surefire-reports/
-
-
-    # Upload screenshots if you add them later
-    - name: Upload screenshots
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: screenshots
-        path: screenshots/
-        if-no-files-found: ignore
