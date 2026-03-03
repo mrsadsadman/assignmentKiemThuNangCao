@@ -129,40 +129,45 @@ public class LoginPage {
     /**
      * FIX: Kiểm tra error message với timeout dài hơn và nhiều lần thử
      */
-    public boolean isErrorDisplayed() {
-        int maxRetries = 3;
-        int retryCount = 0;
-        
-        while (retryCount < maxRetries) {
-            try {
-                System.out.println("Kiểm tra error message lần " + (retryCount + 1));
-                
-                // Thử với các locator khác nhau
-                boolean displayed = wait.until(ExpectedConditions.or(
-                    ExpectedConditions.visibilityOfElementLocated(errorMessage),
-                    ExpectedConditions.visibilityOfElementLocated(errorButton)
-                )).isDisplayed();
-                
-                if (displayed) {
-                    System.out.println("Error message hiển thị!");
-                    return true;
-                }
-            } catch (TimeoutException e) {
-                System.out.println("Chưa thấy error message, thử lại...");
+   public boolean isErrorDisplayed() {
+    int maxRetries = 3;
+    int retryCount = 0;
+    
+    while (retryCount < maxRetries) {
+        try {
+            System.out.println("Kiểm tra error message lần " + (retryCount + 1));
+            
+            // Cách 1: Kiểm tra error message
+            if (driver.findElements(errorMessage).size() > 0 && 
+                driver.findElement(errorMessage).isDisplayed()) {
+                System.out.println("Error message hiển thị!");
+                return true;
             }
             
-            retryCount++;
+            // Cách 2: Kiểm tra error button
+            if (driver.findElements(errorButton).size() > 0 && 
+                driver.findElement(errorButton).isDisplayed()) {
+                System.out.println("Error button hiển thị!");
+                return true;
+            }
+            
+            // Chờ thêm nếu chưa thấy
             try {
-                Thread.sleep(2000); // Chờ 2 giây giữa các lần thử
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
+            
+        } catch (Exception e) {
+            System.out.println("Lỗi khi kiểm tra: " + e.getMessage());
         }
         
-        System.out.println("Error message không hiển thị sau " + maxRetries + " lần thử");
-        return false;
+        retryCount++;
     }
-
+    
+    System.out.println("Error message không hiển thị sau " + maxRetries + " lần thử");
+    return false;
+}
     public String getErrorMessage() {
         try {
             // Thử với error message trước
