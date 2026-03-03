@@ -14,7 +14,7 @@ public class LoginTest extends BaseTest {
     @BeforeMethod
     public void initPage() {
         loginPage = new LoginPage(driver);
-        loginPage.resetToLoginPage();
+        loginPage.hardReset(); // FIX: dùng hardReset thay vì resetToLoginPage
         System.out.println("=== BẮT ĐẦU TEST MỚI ===");
         System.out.println("URL: " + driver.getCurrentUrl());
     }
@@ -44,9 +44,6 @@ public class LoginTest extends BaseTest {
         
         loginPage.login("invalid_user", "secret_sauce");
 
-        // Đợi thêm để error message xuất hiện
-        try { Thread.sleep(3000); } catch (InterruptedException e) { }
-        
         assertTrue(loginPage.isErrorDisplayed(), "Error message không hiển thị");
         String error = loginPage.getErrorMessage();
         System.out.println("Error nhận được: '" + error + "'");
@@ -65,9 +62,6 @@ public class LoginTest extends BaseTest {
         
         loginPage.login("standard_user", "wrong_password");
 
-        // Đợi thêm để error message xuất hiện
-        try { Thread.sleep(3000); } catch (InterruptedException e) { }
-        
         assertTrue(loginPage.isErrorDisplayed(), "Error message không hiển thị");
         String error = loginPage.getErrorMessage();
         System.out.println("Error nhận được: '" + error + "'");
@@ -86,9 +80,6 @@ public class LoginTest extends BaseTest {
         
         loginPage.login("", "secret_sauce");
 
-        // Đợi thêm để error message xuất hiện
-        try { Thread.sleep(3000); } catch (InterruptedException e) { }
-        
         assertTrue(loginPage.isErrorDisplayed(), "Error message không hiển thị");
         String error = loginPage.getErrorMessage();
         System.out.println("Error nhận được: '" + error + "'");
@@ -106,9 +97,6 @@ public class LoginTest extends BaseTest {
         
         loginPage.login("standard_user", "");
 
-        // Đợi thêm để error message xuất hiện
-        try { Thread.sleep(3000); } catch (InterruptedException e) { }
-        
         assertTrue(loginPage.isErrorDisplayed(), "Error message không hiển thị");
         String error = loginPage.getErrorMessage();
         System.out.println("Error nhận được: '" + error + "'");
@@ -126,9 +114,6 @@ public class LoginTest extends BaseTest {
         
         loginPage.login("", "");
 
-        // Đợi thêm để error message xuất hiện
-        try { Thread.sleep(3000); } catch (InterruptedException e) { }
-        
         assertTrue(loginPage.isErrorDisplayed(), "Error message không hiển thị");
         String error = loginPage.getErrorMessage();
         System.out.println("Error nhận được: '" + error + "'");
@@ -146,9 +131,6 @@ public class LoginTest extends BaseTest {
         
         loginPage.login("locked_out_user", "secret_sauce");
 
-        // Đợi thêm để error message xuất hiện
-        try { Thread.sleep(3000); } catch (InterruptedException e) { }
-        
         assertTrue(loginPage.isErrorDisplayed(), "Error message không hiển thị");
         String error = loginPage.getErrorMessage();
         System.out.println("Error nhận được: '" + error + "'");
