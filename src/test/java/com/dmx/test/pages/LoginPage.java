@@ -12,21 +12,31 @@ public class LoginPage {
     private WebDriver driver;
     private WebDriverWait wait;
     private WebDriverWait longWait;
+    private WebDriverWait shortWait;
 
     // Locators
     private By usernameInput = By.id("user-name");
     private By passwordInput = By.id("password");
     private By loginButton = By.id("login-button");
     private By errorMessage = By.cssSelector("h3[data-test='error']");
+    private By errorButton = By.cssSelector(".error-button");
     private By inventoryContainer = By.cssSelector(".inventory_container");
     private By menuButton = By.id("react-burger-menu-btn");
     private By logoutLink = By.id("logout_sidebar_link");
-    private By inventoryList = By.cssSelector(".inventory_list");
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        this.longWait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        
+        // Tăng timeout cho CI
+        if (System.getenv("CI") != null) {
+            this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+            this.longWait = new WebDriverWait(driver, Duration.ofSeconds(30));
+            this.shortWait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        } else {
+            this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+            this.longWait = new WebDriverWait(driver, Duration.ofSeconds(20));
+            this.shortWait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        }
     }
 
     public boolean waitForPageLoad() {
@@ -42,48 +52,32 @@ public class LoginPage {
         }
     }
 
-    /**
-     * FIX: Logout đúng cách
-     */
     public void logout() {
         try {
             System.out.println("Đang logout...");
-            // Click menu button
-            WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(5));
             shortWait.until(ExpectedConditions.elementToBeClickable(menuButton)).click();
             Thread.sleep(1000);
-            
-            // Click logout link
             shortWait.until(ExpectedConditions.elementToBeClickable(logoutLink)).click();
             Thread.sleep(1000);
-            
-            // Đợi quay lại trang login
             wait.until(ExpectedConditions.visibilityOfElementLocated(usernameInput));
             System.out.println("Logout thành công");
         } catch (Exception e) {
             System.out.println("Lỗi khi logout: " + e.getMessage());
-            // Nếu logout fail, load lại trang login
             driver.get("https://www.saucedemo.com/");
         }
     }
 
-    /**
-     * FIX: Reset trạng thái hoàn toàn
-     */
     public void resetToLoginPage() {
         try {
-            // Nếu đang ở inventory, logout
             if (driver.getCurrentUrl().contains("inventory")) {
                 logout();
                 return;
             }
             
-            // Nếu không ở trang login, load lại
             if (!driver.getCurrentUrl().contains("saucedemo.com")) {
                 driver.get("https://www.saucedemo.com/");
             }
             
-            // Đợi trang login load
             waitForPageLoad();
             
         } catch (Exception e) {
@@ -116,7 +110,9 @@ public class LoginPage {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(loginButton)).click();
             System.out.println("Đã click nút Login");
-            Thread.sleep(1000);
+            
+            // Chờ cho response trả về
+            Thread.sleep(2000);
         } catch (Exception e) {
             throw new RuntimeException("Không thể click nút Login", e);
         }
@@ -130,25 +126,59 @@ public class LoginPage {
         clickLogin();
     }
 
+    /**
+     * FIX: Kiểm tra error message với timeout dài hơn và nhiều lần thử
+     */
+    public boolean isErrorDisplayed() {
+        int maxRetries = 3;
+        int retryCount = 0;
+        
+        while (retryCount < maxRetries) {
+            try {
+                System.out.println("Kiểm tra error message lần " + (retryCount + 1));
+                
+                // Thử với các locator khác nhau
+                boolean displayed = wait.until(ExpectedConditions.or(
+                    ExpectedConditions.visibilityOfElementLocated(errorMessage),
+                    ExpectedConditions.visibilityOfElementLocated(errorButton)
+                )).isDisplayed();
+                
+                if (displayed) {
+                    System.out.println("Error message hiển thị!");
+                    return true;
+                }
+            } catch (TimeoutException e) {
+                System.out.println("Chưa thấy error message, thử lại...");
+            }
+            
+            retryCount++;
+            try {
+                Thread.sleep(2000); // Chờ 2 giây giữa các lần thử
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        
+        System.out.println("Error message không hiển thị sau " + maxRetries + " lần thử");
+        return false;
+    }
+
     public String getErrorMessage() {
         try {
+            // Thử với error message trước
             String error = wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage)).getText();
             System.out.println("Thông báo lỗi: " + error);
             return error;
         } catch (TimeoutException e) {
-            System.out.println("Không có thông báo lỗi");
-            return "";
-        }
-    }
-
-    public boolean isErrorDisplayed() {
-        try {
-            boolean displayed = wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage)).isDisplayed();
-            System.out.println("Error displayed: " + displayed);
-            return displayed;
-        } catch (TimeoutException e) {
-            System.out.println("Error message không hiển thị");
-            return false;
+            try {
+                // Thử với error button
+                String error = driver.findElement(errorButton).getAttribute("innerText");
+                System.out.println("Thông báo lỗi (từ button): " + error);
+                return error;
+            } catch (Exception ex) {
+                System.out.println("Không tìm thấy thông báo lỗi");
+                return "";
+            }
         }
     }
 
@@ -169,7 +199,7 @@ public class LoginPage {
 
     public boolean isOnLoginPage() {
         try {
-            return wait.until(ExpectedConditions.visibilityOfElementLocated(usernameInput)).isDisplayed();
+            return shortWait.until(ExpectedConditions.visibilityOfElementLocated(usernameInput)).isDisplayed();
         } catch (Exception e) {
             return false;
         }
